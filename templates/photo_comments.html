@@ -1,0 +1,45 @@
+{% extends "plain.html" %}
+
+{% block body %}
+{% for comment in comments %}
+    <p>
+        On {{ comment.date|date }} at {{ comment.date|time }}
+        {% if comment.url %}
+            <a target="_blank" href="{{ comment.url }}">{{ comment.name }}</a>
+        {% else %}
+            {{ comment.name }}
+        {% endif %}
+        said: <br />
+        {{ comment.text }}
+    </p>
+{% endfor %}
+<form method="POST" action="{{ photo.get_comments_url }}" id="commentform" onsubmit="javascript:submitComment(); return false;">
+<table align="center">
+<tr>
+    <td><label for="spam">Are you a spammer?</label></td>
+    <td><input type="text" name="spam" id="spam" /></td>
+</tr>
+<tr>
+    <td><label for="name">Name:</label></td>
+    <td><input type="text" name="name" id="name" value="Anonymous" /></td>
+</tr>
+<tr>
+    <td><label for="email">Email:</label></td>
+    <td><input type="text" name="email" id="email" /></td>
+</tr>
+<tr>
+    <td><label for="url">URL:</label></td>
+    <td><input type="text" name="url" id="url" /></td>
+</tr>
+<tr>
+    <td><label for="notify">Email on new comments:</label></td>
+    <td><input type="checkbox" name="notify" id="notify" checked="checked" /></td>
+</tr>
+<tr>
+    <td><label for="text">Comment:</label></td>
+    <td><textarea name="text" id="text"></textarea></td>
+</tr>
+</table>
+<input type="submit" value="Say it!" />
+</form>
+{% endblock %}

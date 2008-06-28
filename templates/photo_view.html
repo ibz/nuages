@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ photo.title }}</h2>
+    {% if photo.get_previous_by_date %}
+        <a href="{{ photo.get_previous_by_date.get_url }}" title="(click for previous image)">
+    {% endif %}
+    <img id="image" src="{{ photo.get_file_url }}" alt="" />
+    {% if photo.get_previous_by_date.get_absolute_url %}
+        </a>
+    {% endif %}
+    <span id='properties' style="display: none;"><table>
+    {% for property in photo.get_properties %}
+        {% if property.value %}
+            <tr>
+                <td>{{ property.name }}:</td>
+                <td>{{ property.value }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table></span>
+    <table id="navigation">
+    <tr>
+        <td class="left">
+            posted on {{ photo.date_posted|date }}
+            at {{ photo.date_posted|time }} (<abbr title="Coordinated Universal Time">UTC</abbr>)
+            <span class="altlink" onclick="new Effect.toggle($('properties'), 'appear')">(Properties)</span>
+            <script>
+                function toggleComments(href) {
+                    if(!$('comments').visible()) {
+                        new Ajax.Updater('comments', href, {method: 'GET'});
+                    }
+                    new Effect.toggle($('comments'), 'appear', {afterFinish:
+                        function(t) {
+                            if($('comments').visible()) {
+                                new Effect.ScrollTo('comments');
+                            } else {
+                                new Effect.ScrollTo('main');
+                        }
+                    }});
+                }
+                function submitComment() {
+                    $('commentform').hide();
+                    new Ajax.Updater('comments', $('commentform').action,
+                        {asynchronous: true,
+                         parameters: Form.serialize($('commentform')),
+                         onComplete: function() { $('commentform').show(); new Effect.ScrollTo('comments'); }});
+                }
+            </script>
+            <a href="{{ photo.get_comments_url }}" onclick="javascript:toggleComments(this.href);return false;">(Comments)</a>
+            {% if admin %}
+                <a href="{{ photo.get_edit_url }}">(Edit)</a>
+            {% endif %}
+            {% if photo.get_next_by_date %}
+                <a id="blog_next" href="{{ photo.get_next_by_date.get_url }}">(Next)</a>
+            {% endif %}
+        </td>
+        <td class="right">
+            <a href="/photo/archive/">(Archive)</a>
+            {% if admin %}
+                <a href="/admin/photo/add/">(Add)</a>
+            {% endif %}
+        </td>
+    </tr>
+    </table>
+    <div id="comments" style="display: none;">
+    </div>
+{% endblock %}
