@@ -22,8 +22,7 @@
     <table id="navigation">
     <tr>
         <td class="left">
-            posted on {{ photo.date_posted|date }}
-            at {{ photo.date_posted|time }} (<abbr title="Coordinated Universal Time">UTC</abbr>)
+            posted on {{ photo.date_posted|date }} at {{ photo.date_posted|time }}
             <span class="altlink" onclick="new Effect.toggle($('properties'), 'appear')">(Properties)</span>
             <script>
                 function toggleComments(href) {

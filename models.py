@@ -12,14 +12,15 @@ from lib import EXIF
 import settings
 import utils
 
-class Photo(db.Model):
+class Photo(db.Expando):
+    id = db.StringProperty()
     title = db.StringProperty()
 
     content_type = db.StringProperty()
     file = db.BlobProperty()
     thumbnail = db.BlobProperty()
 
-    date_posted = db.DateTimeProperty(auto_now_add=True)
+    date_posted = db.DateTimeProperty()
 
     location = db.StringProperty()
     description = db.StringProperty()
@@ -27,11 +28,17 @@ class Photo(db.Model):
     def get_date_posted_rfc3339(self):
         return utils.strftime_rfc3339(self.date_posted)
 
+    def get_date_posted_for_edit(self):
+        return utils.strftime_for_edit(self.date_posted)
+
+    def get_slug(self):
+        return self.id.split("-")[3]
+
     def get_url(self):
-        return "%s/photo/%s/" % (settings.app_url, self.key().id())
+        return "%s/photo/%s/" % (settings.app_url, self.id)
 
     def get_edit_url(self):
-        return "%sedit/" % self.get_url()
+        return "%s/admin/photo/%s/edit/" % (settings.app_url, self.id)
 
     def get_comments_url(self):
         return "%scomments/" % self.get_url()
@@ -76,8 +83,8 @@ class Photo(db.Model):
 class Comment(db.Model):
     photo  = db.ReferenceProperty(Photo)
     name   = db.StringProperty()
-    email  = db.EmailProperty()
-    url    = db.LinkProperty()
+    email  = db.StringProperty()
+    url    = db.StringProperty()
     notify = db.BooleanProperty()
     text   = db.TextProperty()
     date   = db.DateTimeProperty(auto_now_add=True)

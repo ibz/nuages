@@ -56,29 +56,29 @@ class PhotoFeed(BaseHandler):
 
 class PhotoView(BaseHandler):
     def get(self, id):
-        photo = Photo.get_by_id(long(id))
+        photo = Photo.gql("WHERE id = :1", id).get()
         self.render_html("photo_view", {'photo': photo})
 
 class PhotoViewFile(BaseHandler):
     def get(self, id):
-        photo = Photo.get_by_id(long(id))
+        photo = Photo.gql("WHERE id = :1", id).get()
         self.render(str(photo.content_type), photo.file)
 
 class PhotoViewThumbnail(BaseHandler):
     def get(self, id):
-        photo = Photo.get_by_id(long(id))
+        photo = Photo.gql("WHERE id = :1", id).get()
         # TODO content type
         self.render(str(photo.content_type), photo.thumbnail)
 
 class PhotoComments(BaseHandler):
     def get(self, id):
-        photo = Photo.get_by_id(long(id))
+        photo = Photo.gql("WHERE id = :1", id).get()
         comments = sorted(photo.comment_set)
         self.render_html("photo_comments", {'photo': photo,
                                             'comments': comments})
 
     def post(self, id):
-        photo = Photo.get_by_id(long(id))
+        photo = Photo.gql("WHERE id = :1", id).get()
 
         spam = self.request.get('spam')
         if spam.upper() != "NO":
@@ -101,13 +101,13 @@ class PhotoComments(BaseHandler):
 
 def main():
     application = webapp.WSGIApplication(
-        [(r"/", Index),
-         (r"/photo/archive/", PhotoArchive),
-         (r"/photo/feed/", PhotoFeed),
-         (r"/photo/(?P<id>\d+)/", PhotoView),
-         (r"/photo/(?P<id>\d+)/file/", PhotoViewFile),
-         (r"/photo/(?P<id>\d+)/thumbnail/", PhotoViewThumbnail),
-         (r"/photo/(?P<id>\d+)/comments/", PhotoComments)],
+        [(r"^/$", Index),
+         (r"^/photo/archive/$", PhotoArchive),
+         (r"^/photo/feed/$", PhotoFeed),
+         (r"^/photo/(?P<id>[a-z0-9-]+)/$", PhotoView),
+         (r"^/photo/(?P<id>[a-z0-9-]+)/file/$", PhotoViewFile),
+         (r"^/photo/(?P<id>[a-z0-9-]+)/thumbnail/$", PhotoViewThumbnail),
+         (r"^/photo/(?P<id>[a-z0-9-]+)/comments/$", PhotoComments)],
         debug=True)
     wsgiref.handlers.CGIHandler().run(application)
 

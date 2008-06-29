@@ -1,8 +1,9 @@
 # coding=UTF-8
 
 app_name = "APP NAME HERE"
-app_url = "http://app-url-here.tld"
+app_url = "http://localhost:8080"
 photographer_name = "YOUR NAME HERE"
 admin_email = "YOUR EMAIL HERE"
 
 num_items_in_feed = 200
+date_format_for_edit = "%Y-%m-%d %H:%M"

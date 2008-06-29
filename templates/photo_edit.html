@@ -2,11 +2,35 @@
 
 {% block body %}
 <div>
+<script type="text/javascript">
+function pad(n) {
+    return n < 10 ? "0" + n.toString() : n.toString();
+}
+
+function setNow(id) {
+    elem = document.getElementById(id);
+    date = new Date();
+    text = date.getFullYear() + "-" + pad(date.getMonth()) + "-" + pad(date.getDate()) + " " +
+           pad(date.getHours()) + ":" + pad(date.getMinutes());
+    elem.value = text;
+}
+</script>
 <form method="POST" action="" enctype="multipart/form-data">
 <table>
 <tr>
+    <td><label for="date_posted">Date posted:</label></td>
+    <td>
+        <input type="text" name="date_posted" id="date_posted" value="{{ photo.get_date_posted_for_edit }}" />
+        <a href="javascript:setNow('date_posted');">Now</a>
+    </td>
+</tr>
+<tr>
     <td><label for="title">Title:</label></td>
     <td><input type="text" name="title" id="title" value="{{ photo.title }}" /></td>
+</tr>
+<tr>
+    <td><label for="slug">Slug:</label></td>
+    <td><input type="text" name="slug" id="slug" value="{{ photo.get_slug }}" /></td>
 </tr>
 <tr>
     <td><label for="location">Location:</label></td>
