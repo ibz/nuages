@@ -5,5 +5,5 @@ app_url = "http://localhost:8080"
 photographer_name = "YOUR NAME HERE"
 admin_email = "YOUR EMAIL HERE"
 
-num_items_in_feed = 200
+num_items_in_feed = 20
 date_format_for_edit = "%Y-%m-%d %H:%M"
