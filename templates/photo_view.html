@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+    <table id="navigation">
+    <tr>
+        <td class="right">
+            {% for page in pages %}
+                <a href="/{{ page.slug }}">({{ page.title }})</a>
+            {% endfor %}
+            <a href="/photo/archive/">(Archive)</a>
+            <a href="/">(Home)</a>
+        </td>
+    </tr>
+    </table>
+
     <h2>{{ photo.title }}</h2>
+
     {% if photo.get_previous_by_date %}
         <a href="{{ photo.get_previous_by_date.get_url }}" title="(click for previous image)">
     {% endif %}
@@ -52,12 +66,6 @@
             {% endif %}
             {% if photo.get_next_by_date %}
                 <a id="blog_next" href="{{ photo.get_next_by_date.get_url }}">(Next)</a>
-            {% endif %}
-        </td>
-        <td class="right">
-            <a href="/photo/archive/">(Archive)</a>
-            {% if admin %}
-                <a href="/admin/photo/add/">(Add)</a>
             {% endif %}
         </td>
     </tr>

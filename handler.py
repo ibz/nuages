@@ -4,6 +4,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
+from models import Page
 import settings
 
 class BaseHandler(webapp.RequestHandler):
@@ -16,6 +17,9 @@ class BaseHandler(webapp.RequestHandler):
             data = {}
         data['admin'] = users.is_current_user_admin()
         data['settings'] = settings
+        query = Page.gql("WHERE order_in_menu > 0 "
+                         "ORDER BY order_in_menu")
+        data['pages'] = [p for p in query]
 
         template_path = os.path.join(os.path.dirname(__file__), "templates")
         output = template.render(os.path.join(template_path, template_file), data)

@@ -43,8 +43,9 @@ class PhotoArchive(BaseHandler):
 
         photos = query.fetch(self.NUM_PER_PAGE, (page - 1) * self.NUM_PER_PAGE)
 
-        self.render_html("photo_archive", {'photos': photos,
-                                           'paginator': self._get_paginator(page, page_count)})
+        self.render_html("photo_archive",
+                         {'photos': photos,
+                          'paginator': self._get_paginator(page, page_count)})
 
 class PhotoFeed(BaseHandler):
     def get(self):

@@ -120,3 +120,15 @@ class Comment(db.Model):
     def put(self):
         db.Model.put(self)
         self._send_mails()
+
+class Page(db.Model):
+    title = db.StringProperty()
+    slug = db.StringProperty()
+    content = db.TextProperty()
+    order_in_menu = db.IntegerProperty()
+
+    def get_url(self):
+        return "/%s" % self.slug
+
+    def get_edit_url(self):
+        return "/admin/page/%s/edit/" % self.slug

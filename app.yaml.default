@@ -17,5 +17,12 @@ handlers:
   script: admin.py
   login: admin
 
-- url: .*
+- url: /
   script: photo.py
+
+- url: /photo/.*
+  script: photo.py
+
+- url: /.*
+  script: page.py
+

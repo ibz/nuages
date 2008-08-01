@@ -10,9 +10,10 @@ import settings
 import utils
 
 from handler import BaseHandler
+from models import Page
 from models import Photo
 
-class AdminIndex(BaseHandler):
+class Index(BaseHandler):
     def get(self):
         if users.is_current_user_admin():
             self.render_html("admin_index", {'logout_url': users.create_logout_url("/")})
@@ -69,11 +70,41 @@ class PhotoEdit(BaseHandler):
 
         self.redirect(photo.get_url())
 
+class PageAdd(BaseHandler):
+    def get(self):
+        self.render_html("page_edit")
+
+    def post(self):
+        page = Page(title=self.request.get('title'),
+                    slug=self.request.get('slug'),
+                    content=self.request.get('content'),
+                    order_in_menu=int(self.request.get('order_in_menu')))
+        page.put()
+        self.redirect(page.get_url())
+
+class PageEdit(BaseHandler):
+    def get(self, slug):
+        page = Page.gql("WHERE slug = :1", slug).get()
+        self.render_html("page_edit", {'page': page})
+
+    def post(self, slug):
+        page = Page.gql("WHERE slug = :1", slug).get()
+        page.title = self.request.get('title')
+        page.slug = self.request.get('slug')
+        page.content = self.request.get('content')
+        page.order_in_menu = int(self.request.get('order_in_menu'))
+
+        page.put()
+
+        self.redirect(page.get_url())
+
 def main():
     application = webapp.WSGIApplication(
-        [(r"^/admin/$", AdminIndex),
+        [(r"^/admin/$", Index),
          (r"^/admin/photo/add/$", PhotoAdd),
-         (r"^/admin/photo/(?P<id>[a-z0-9-]+)/edit/$", PhotoEdit)],
+         (r"^/admin/photo/(?P<id>[a-z0-9-]+)/edit/$", PhotoEdit),
+         (r"^/admin/page/add/$", PageAdd),
+         (r"^/admin/page/(?P<slug>[a-z0-9-]+)/edit/$", PageEdit)],
         debug=True)
     wsgiref.handlers.CGIHandler().run(application)
 
