@@ -23,40 +23,22 @@ class Index(BaseHandler):
 def get_photo_id(date_posted, slug):
     return "%s-%s" % (date_posted.strftime("%Y-%m-%d"), slug)
 
-class PhotoAdd(BaseHandler):
-    def get(self):
-        self.render_html("photo_edit")
-
-    def post(self):
-        if not self.request.get('file'):
-            return
-
-        date_posted = utils.strptime_for_edit(self.request.get('date_posted'))
-        file = db.Blob(self.request.get('file'))
-        thumbnail = images.resize(file, 128, 128)
-
-        photo = Photo(title=self.request.get('title'),
-                      id=get_photo_id(date_posted, self.request.get('slug')),
-                      location=self.request.get('location'),
-                      description=self.request.get('description'),
-                      date_posted=date_posted,
-                      content_type="image/jpeg", # TODO
-                      file=file,
-                      thumbnail=thumbnail)
-
-        photo.put()
-
-        self.redirect(photo.get_url())
-
 class PhotoEdit(BaseHandler):
-    def get(self, id):
-        photo = Photo.gql("WHERE id = :1", id).get()
+    def get(self, id=None):
+        if id:
+            photo = Photo.gql("WHERE id = :1", id).get()
+        else:
+            photo = None
         self.render_html("photo_edit", {'photo': photo})
 
-    def post(self, id):
-        photo = Photo.gql("WHERE id = :1", id).get()
+    def post(self, id=None):
+        if id:
+            photo = Photo.gql("WHERE id = :1", id).get()
+        else:
+            photo = Photo(content_type="image/jpg")
 
         date_posted = utils.strptime_for_edit(self.request.get('date_posted'))
+
         photo.title = self.request.get('title')
         photo.id = get_photo_id(date_posted, self.request.get('slug'))
         photo.location = self.request.get('location')
@@ -70,25 +52,19 @@ class PhotoEdit(BaseHandler):
 
         self.redirect(photo.get_url())
 
-class PageAdd(BaseHandler):
-    def get(self):
-        self.render_html("page_edit")
-
-    def post(self):
-        page = Page(title=self.request.get('title'),
-                    slug=self.request.get('slug'),
-                    content=self.request.get('content'),
-                    order_in_menu=int(self.request.get('order_in_menu')))
-        page.put()
-        self.redirect(page.get_url())
-
 class PageEdit(BaseHandler):
-    def get(self, slug):
-        page = Page.gql("WHERE slug = :1", slug).get()
+    def get(self, slug=None):
+        if slug:
+            page = Page.gql("WHERE slug = :1", slug).get()
+        else:
+            page = None
         self.render_html("page_edit", {'page': page})
 
-    def post(self, slug):
-        page = Page.gql("WHERE slug = :1", slug).get()
+    def post(self, slug=None):
+        if slug:
+            page = Page.gql("WHERE slug = :1", slug).get()
+        else:
+            page = Page()
         page.title = self.request.get('title')
         page.slug = self.request.get('slug')
         page.content = self.request.get('content')
@@ -101,9 +77,9 @@ class PageEdit(BaseHandler):
 def main():
     application = webapp.WSGIApplication(
         [(r"^/admin/$", Index),
-         (r"^/admin/photo/add/$", PhotoAdd),
+         (r"^/admin/photo/add/$", PhotoEdit),
          (r"^/admin/photo/(?P<id>[a-z0-9-]+)/edit/$", PhotoEdit),
-         (r"^/admin/page/add/$", PageAdd),
+         (r"^/admin/page/add/$", PageEdit),
          (r"^/admin/page/(?P<slug>[a-z0-9-]+)/edit/$", PageEdit)],
         debug=True)
     wsgiref.handlers.CGIHandler().run(application)

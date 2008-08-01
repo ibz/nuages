@@ -32,13 +32,13 @@ class Photo(db.Expando):
         return utils.strftime_for_edit(self.date_posted)
 
     def get_slug(self):
-        return self.id.split("-")[3]
+        return "-".join(self.id.split("-")[3:])
 
     def get_url(self):
-        return "%s/photo/%s/" % (settings.app_url, self.id)
+        return "/photo/%s/" % self.id
 
     def get_edit_url(self):
-        return "%s/admin/photo/%s/edit/" % (settings.app_url, self.id)
+        return "/admin/photo/%s/edit/" % self.id
 
     def get_comments_url(self):
         return "%scomments/" % self.get_url()
