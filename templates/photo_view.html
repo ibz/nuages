@@ -37,6 +37,7 @@
     <tr>
         <td class="left">
             posted on {{ photo.date_posted|date }} at {{ photo.date_posted|time }}
+            {% if photo.view_count %}viewed {{ photo.view_count }} times{% endif %}
             <span class="altlink" onclick="new Effect.toggle($('properties'), 'appear')">(Properties)</span>
             <script>
                 function toggleComments(href) {

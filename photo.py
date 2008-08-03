@@ -1,5 +1,6 @@
 import wsgiref.handlers
 
+from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 
@@ -9,9 +10,18 @@ from handler import BaseHandler
 from models import Comment
 from models import Photo
 
+def update_view_count(photo):
+    if not users.is_current_user_admin():
+        if not photo.view_count:
+            photo.view_count = 1
+        else:
+            photo.view_count += 1
+        photo.put()
+
 class Index(BaseHandler):
     def get(self):
         photo = db.Query(Photo).order('-date_posted').get()
+        update_view_count(photo)
         self.render_html("photo_view", {'photo': photo})
 
 class PhotoArchive(BaseHandler):
@@ -58,6 +68,7 @@ class PhotoFeed(BaseHandler):
 class PhotoView(BaseHandler):
     def get(self, id):
         photo = Photo.gql("WHERE id = :1", id).get()
+        update_view_count(photo)
         self.render_html("photo_view", {'photo': photo})
 
 class PhotoViewFile(BaseHandler):

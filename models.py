@@ -25,6 +25,8 @@ class Photo(db.Expando):
     location = db.StringProperty()
     description = db.StringProperty()
 
+    view_count = db.IntegerProperty()
+
     def get_date_posted_rfc3339(self):
         return utils.strftime_rfc3339(self.date_posted)
 
@@ -76,7 +78,6 @@ class Photo(db.Expando):
                 {'name': "Focal length", 'value': get_exif_property("EXIF FocalLength")},
                 {'name': "ISO", 'value': get_exif_property("EXIF ISOSpeedRatings")},
                 {'name': "Flash", 'value': get_exif_property("EXIF Flash")},
-                {'name': "Exposure bias", 'value': get_exif_property("EXIF ExposureBiasValue")},
                 {'name': "Camera", 'value': camera},
                 {'name': "Date taken", 'value': get_exif_property("EXIF DateTimeOriginal")}]
 
