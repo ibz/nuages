@@ -9,12 +9,12 @@
     {% for photo in photos %}
     <entry>
         <title>{{ photo.title }}</title>
-        <link href="{{ photo.get_url }}" rel="alternate"></link>
+        <link href="{{ settings.app_url }}{{ photo.get_url }}" rel="alternate"></link>
         <updated>{{ photo.get_date_posted_rfc3339 }}</updated>
         <id>{{ photo.id }}</id>
         <summary type="xhtml">
             <div xmlns="http://www.w3.org/1999/xhtml">
-                <img src="{{ photo.get_thumbnail_file_url }}" />
+                <img src="{{ settings.app_url }}{{ photo.get_thumbnail_file_url }}" />
             </div>
         </summary>
     </entry>

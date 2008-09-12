@@ -20,7 +20,7 @@
         <a href="{{ photo.get_previous_by_date.get_url }}" title="(click for previous image)">
     {% endif %}
     <img id="image" src="{{ photo.get_file_url }}" alt="" />
-    {% if photo.get_previous_by_date.get_absolute_url %}
+    {% if photo.get_previous_by_date %}
         </a>
     {% endif %}
     <span id='properties' style="display: none;"><table>
