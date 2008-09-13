@@ -12,6 +12,7 @@ import utils
 from handler import BaseHandler
 from models import Page
 from models import Photo
+from models import PhotoCategory
 from models import PhotoLocation
 
 class Index(BaseHandler):
@@ -50,7 +51,19 @@ class PhotoEdit(BaseHandler):
             location = PhotoLocation(id=location_slug, name=photo.location)
             location.put()
         photo.location_ref = location
- 
+
+        photo.categories = self.request.get('categories')
+
+        photo.categories_ref = []
+        for category_name in photo.categories.split(","):
+            category_name = category_name.strip()
+            category_slug = utils.slug(category_name)
+            category = db.Query(PhotoCategory).filter("id = ", category_slug).get()
+            if not category:
+                category = PhotoCategory(id=category_slug, name=category_name)
+                category.put()
+            photo.categories_ref.append(category.key())
+
         photo.description = self.request.get('description')
         photo.date_posted = date_posted
         if self.request.get('file'):

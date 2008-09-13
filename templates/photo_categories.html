@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Categories</h2>
+
+{% for c in categories %}
+<p><a href="/photo/browse/?category={{ c.0.id }}">{{ c.0.name }}</a> ({{ c.1 }})</p>
+{% endfor %}
+
+{% endblock %}

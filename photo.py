@@ -9,6 +9,7 @@ import settings
 from handler import BaseHandler
 from models import Comment
 from models import Photo
+from models import PhotoCategory
 from models import PhotoLocation
 
 def update_view_count(photo):
@@ -39,6 +40,7 @@ class PhotoBrowse(BaseHandler):
     def get(self):
         page = self.request.get('page')
         location_filter = self.request.get('location')
+        category_filter = self.request.get('category')
 
         query = db.Query(Photo)
         if location_filter:
@@ -47,6 +49,13 @@ class PhotoBrowse(BaseHandler):
                 query.filter("location_ref = ", location)
             else:
                 location_filter = None
+        if category_filter:
+            category = db.Query(PhotoCategory).filter("id = ", category_filter).get()
+            if category:
+                query.filter("categories_ref = ", category)
+            else:
+                category_filter = None
+  
         query.order("-date_posted")
 
         count = query.count()
@@ -61,18 +70,28 @@ class PhotoBrowse(BaseHandler):
 
         photos = query.fetch(self.NUM_PER_PAGE, (page - 1) * self.NUM_PER_PAGE)
 
-        filter = location_filter and ("&location=%s" % location_filter) or ""
-
-        if not location_filter:
+        if not location_filter and not category_filter:
             title = "Browse archive"
-        else:
+            filter = ""
+        elif location_filter:
             title = "Browse photos from %s" % location.name
+            filter = "&location=%s" % location_filter
+        elif category_filter:
+            title = "Browse photos from category %s" % category.name
+            filter = "&category=%s" % category_filter
 
         self.render_html("photo_browse",
                          {'photos': photos,
                           'paginator': self._get_paginator(page, page_count),
                           'filter': filter,
                           'title': title})
+
+class PhotoCategories(BaseHandler):
+    def get(self):
+        categories = [c for c in db.Query(PhotoCategory).order("name")]
+        categories = [(c, db.Query(Photo).filter("categories_ref = ", c.key()).count(1000)) for c in categories]
+        categories = [c for c in categories if c[1]]
+        self.render_html("photo_categories", {'categories': categories})
 
 class PhotoLocations(BaseHandler):
     def get(self):
@@ -138,6 +157,7 @@ def main():
     application = webapp.WSGIApplication(
         [(r"^/$", Index),
          (r"^/photo/browse/$", PhotoBrowse),
+         (r"^/photo/categories/$", PhotoCategories),
          (r"^/photo/locations/$", PhotoLocations),
          (r"^/photo/feed/$", PhotoFeed),
          (r"^/photo/(?P<id>[a-z0-9-]+)/$", PhotoView),

@@ -10,3 +10,10 @@ indexes:
   - name: location_ref
   - name: date_posted
     direction: desc
+
+- kind: Photo
+  properties:
+  - name: categories_ref
+  - name: date_posted
+    direction: desc
+

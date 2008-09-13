@@ -16,6 +16,10 @@ class PhotoLocation(db.Model):
     id = db.StringProperty()
     name = db.StringProperty()
 
+class PhotoCategory(db.Model):
+    id = db.StringProperty()
+    name = db.StringProperty()
+
 class Photo(db.Expando):
     id = db.StringProperty()
     title = db.StringProperty()
@@ -28,6 +32,8 @@ class Photo(db.Expando):
 
     location = db.StringProperty()
     location_ref = db.ReferenceProperty(PhotoLocation)
+    categories = db.StringProperty()
+    categories_ref = db.ListProperty(db.Key)
     description = db.StringProperty()
 
     view_count = db.IntegerProperty()
