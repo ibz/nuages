@@ -12,6 +12,10 @@ from lib import EXIF
 import settings
 import utils
 
+class PhotoLocation(db.Model):
+    id = db.StringProperty()
+    name = db.StringProperty()
+
 class Photo(db.Expando):
     id = db.StringProperty()
     title = db.StringProperty()
@@ -23,6 +27,7 @@ class Photo(db.Expando):
     date_posted = db.DateTimeProperty()
 
     location = db.StringProperty()
+    location_ref = db.ReferenceProperty(PhotoLocation)
     description = db.StringProperty()
 
     view_count = db.IntegerProperty()

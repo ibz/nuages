@@ -1,22 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <table id="navigation">
-    <tr>
-        <td class="right">
-            {% for page in pages %}
-                <a href="/{{ page.slug }}">({{ page.title }})</a>
-            {% endfor %}
-            <a href="/photo/archive/">(Archive)</a>
-            <a href="/">(Home)</a>
-        </td>
-    </tr>
-    </table>
-
     <h2>{{ page.title }}</h2>
 
     {{ page.content }}
-    <table id="navigation">
+    <table class="navigation">
     <tr>
         <td class="left">
           {% if admin %}

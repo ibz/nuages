@@ -1,19 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <table id="navigation">
-    <tr>
-        <td class="right">
-            {% for page in pages %}
-                <a href="/{{ page.slug }}">({{ page.title }})</a>
-            {% endfor %}
-            <a href="/photo/archive/">(Archive)</a>
-            <a href="/">(Home)</a>
-        </td>
-    </tr>
-    </table>
-
     <h2>{{ photo.title }}</h2>
 
     {% if photo.get_previous_by_date %}
@@ -33,7 +20,7 @@
         {% endif %}
     {% endfor %}
     </table></span>
-    <table id="navigation">
+    <table class="navigation">
     <tr>
         <td class="left">
             posted on {{ photo.date_posted|date }} at {{ photo.date_posted|time }}

@@ -9,6 +9,7 @@ import settings
 from handler import BaseHandler
 from models import Comment
 from models import Photo
+from models import PhotoLocation
 
 def update_view_count(photo):
     if not users.is_current_user_admin():
@@ -24,7 +25,7 @@ class Index(BaseHandler):
         update_view_count(photo)
         self.render_html("photo_view", {'photo': photo})
 
-class PhotoArchive(BaseHandler):
+class PhotoBrowse(BaseHandler):
     NUM_PER_PAGE = 15
 
     def _get_paginator(self, page, page_count):
@@ -37,8 +38,15 @@ class PhotoArchive(BaseHandler):
 
     def get(self):
         page = self.request.get('page')
+        location_filter = self.request.get('location')
 
         query = db.Query(Photo)
+        if location_filter:
+            location = db.Query(PhotoLocation).filter("id = ", location_filter).get()
+            if location:
+                query.filter("location_ref = ", location)
+            else:
+                location_filter = None
         query.order("-date_posted")
 
         count = query.count()
@@ -53,9 +61,24 @@ class PhotoArchive(BaseHandler):
 
         photos = query.fetch(self.NUM_PER_PAGE, (page - 1) * self.NUM_PER_PAGE)
 
-        self.render_html("photo_archive",
+        filter = location_filter and ("&location=%s" % location_filter) or ""
+
+        if not location_filter:
+            title = "Browse archive"
+        else:
+            title = "Browse photos from %s" % location.name
+
+        self.render_html("photo_browse",
                          {'photos': photos,
-                          'paginator': self._get_paginator(page, page_count)})
+                          'paginator': self._get_paginator(page, page_count),
+                          'filter': filter,
+                          'title': title})
+
+class PhotoLocations(BaseHandler):
+    def get(self):
+        locations = [(l, l.photo_set.count(1000)) for l in db.Query(PhotoLocation).order("name")]
+        locations = [l for l in locations if l[1]]
+        self.render_html("photo_locations", {'locations': locations})
 
 class PhotoFeed(BaseHandler):
     def get(self):
@@ -114,7 +137,8 @@ class PhotoComments(BaseHandler):
 def main():
     application = webapp.WSGIApplication(
         [(r"^/$", Index),
-         (r"^/photo/archive/$", PhotoArchive),
+         (r"^/photo/browse/$", PhotoBrowse),
+         (r"^/photo/locations/$", PhotoLocations),
          (r"^/photo/feed/$", PhotoFeed),
          (r"^/photo/(?P<id>[a-z0-9-]+)/$", PhotoView),
          (r"^/photo/(?P<id>[a-z0-9-]+)/file/$", PhotoViewFile),

@@ -1,0 +1,12 @@
+indexes:
+
+- kind: Photo
+  properties:
+  - name: date_posted
+    direction: desc
+
+- kind: Photo
+  properties:
+  - name: location_ref
+  - name: date_posted
+    direction: desc

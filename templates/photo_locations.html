@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Locations</h2>
+
+{% for l in locations %}
+<p><a href="/photo/browse/?location={{ l.0.id }}">{{ l.0.name }}</a> ({{ l.1 }})</p>
+{% endfor %}
+
+{% endblock %}

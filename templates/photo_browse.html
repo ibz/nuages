@@ -2,19 +2,7 @@
 
 {% block content %}
 
-<table id="navigation">
-<tr>
-    <td class="right">
-        {% for page in pages %}
-            <a href="/{{ page.slug }}">({{ page.title }})</a>
-        {% endfor %}
-        <a href="/photo/archive/">(Archive)</a>
-        <a href="/">(Home)</a>
-    </td>
-</tr>
-</table>
-
-<h2>Archive</h2>
+<h2>{{ title }}</h2>
 
 <table class="imagelist">
     {% for photo in photos %}
@@ -32,17 +20,17 @@
     {% endfor %}
 </table>
 
-<table id="navigation">
+<table class="navigation">
 <tr>
     <td class="left">
     {% if paginator.has_previous_page %}
-        <a title="First page" href="/photo/archive/?page=1">|&lt;</a>
-        <a title="Previous page" href="/photo/archive/?page={{ paginator.previous_page_number }}">&lt;&lt; Newer</a>
+        <a title="First page" href="/photo/archive/?page=1{{ filter }}">|&lt;</a>
+        <a title="Previous page" href="/photo/archive/?page={{ paginator.previous_page_number }}{{ filter }}">&lt;&lt; Newer</a>
     {% endif %}
     Page {{ paginator.page_number }} of {{ paginator.num_pages }}
     {% if paginator.has_next_page %}
-        <a title="Next page" href="/photo/archive/?page={{ paginator.next_page_number }}">Older &gt;&gt;</a>
-        <a title="Last page" href="/photo/archive/?page=last">&gt;|</a>
+        <a title="Next page" href="/photo/archive/?page={{ paginator.next_page_number }}{{ filter }}">Older &gt;&gt;</a>
+        <a title="Last page" href="/photo/archive/?page=last{{ filter }}">&gt;|</a>
     {% endif %}
     </td>
 </tr>

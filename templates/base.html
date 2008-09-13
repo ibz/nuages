@@ -1,6 +1,19 @@
 {% extends "plain.html" %}
 {% block body %}
 <div id="main">
+    <table class="navigation">
+    <tr>
+        <td class="right">
+            {% for page in pages %}
+                <a href="/{{ page.slug }}">({{ page.title }})</a>
+            {% endfor %}
+            <a href="/photo/browse/">(Archive)</a>
+            <a href="/photo/locations/">(Locations)</a>
+            <a href="/">(Home)</a>
+        </td>
+    </tr>
+    </table>
+
     {% block content %} {% endblock %}
 </div>
 {% endblock %}

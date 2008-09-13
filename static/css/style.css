@@ -36,17 +36,17 @@ img {
  border-style: none;
 }
 
-table#navigation {
+table.navigation {
  margin-left: auto;
  margin-right: auto;
  width: 780px;
 }
 
-table#navigation td.left {
+table.navigation td.left {
  text-align: left;
 }
 
-table#navigation td.right {
+table.navigation td.right {
  text-align: right;
 }
 
