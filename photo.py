@@ -13,6 +13,8 @@ from models import PhotoCategory
 from models import PhotoLocation
 
 def update_view_count(photo):
+    if not photo:
+        return
     if not users.is_current_user_admin():
         if not photo.view_count:
             photo.view_count = 1

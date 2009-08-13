@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if photo %}
     <h2>{{ photo.title }}</h2>
 
     {% if photo.get_previous_by_date %}
@@ -61,4 +62,7 @@
     </table>
     <div id="comments" style="display: none;">
     </div>
+{% else %}
+    <h2>No photo posted yet. Go to <a href="/admin/">/admin/</a> and log in with your Google username to get started.</h2>
+{% endif %}
 {% endblock %}

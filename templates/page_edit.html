@@ -1,7 +1,7 @@
 {% extends "plain.html" %}
 
 {% block body %}
-<div>
+<div style="text-align: left">
 <form method="POST" action="">
 <table>
 <tr>
@@ -10,11 +10,14 @@
 </tr>
 <tr>
     <td><label for="slug">Slug:</label></td>
-    <td><input type="text" name="slug" id="slug" value="{{ page.slug }}" /></td>
+    <td>
+        <input type="text" name="slug" id="slug" value="{{ page.slug }}" />
+        <a href="javascript:setSlug('title', 'slug');">Get from title</a>
+    </td>
 </tr>
 <tr>
-    <td><label for="content">Content:</label></td>
-    <td><textarea name="content" id="content">{{ page.content }}</textarea></td>
+    <td><label for="content">Content (HTML):</label></td>
+    <td><textarea name="content" id="content" rows="20" cols="100">{{ page.content }}</textarea></td>
 </tr>
 <tr>
     <td><label for="order_in_menu">Order in menu:</label></td>

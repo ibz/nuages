@@ -1,16 +1,16 @@
 {% extends "plain.html" %}
 
 {% block body %}
-<div>
+<div style="text-align: left">
 <script type="text/javascript">
 function pad(n) {
     return n < 10 ? "0" + n.toString() : n.toString();
 }
 
-function setNow(id) {
-    elem = document.getElementById(id);
+function setDate() {
+    elem = document.getElementById('date_posted');
     date = new Date();
-    text = date.getFullYear() + "-" + pad(date.getMonth()) + "-" + pad(date.getDate()) + " " +
+    text = date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) + " " +
            pad(date.getHours()) + ":" + pad(date.getMinutes());
     elem.value = text;
 }
@@ -21,7 +21,7 @@ function setNow(id) {
     <td><label for="date_posted">Date posted:</label></td>
     <td>
         <input type="text" name="date_posted" id="date_posted" value="{{ photo.get_date_posted_for_edit }}" />
-        <a href="javascript:setNow('date_posted');">Now</a>
+        <a href="javascript:setDate();">Set to now</a>
     </td>
 </tr>
 <tr>
@@ -30,7 +30,10 @@ function setNow(id) {
 </tr>
 <tr>
     <td><label for="slug">Slug:</label></td>
-    <td><input type="text" name="slug" id="slug" value="{{ photo.get_slug }}" /></td>
+    <td>
+        <input type="text" name="slug" id="slug" value="{{ photo.get_slug }}" />
+        <a href="javascript:setSlug('title', 'slug');">Get from title</a>
+    </td>
 </tr>
 <tr>
     <td><label for="location">Location:</label></td>
@@ -38,7 +41,7 @@ function setNow(id) {
 </tr>
 <tr>
     <td><label for="categories">Categories:</label></td>
-    <td><input type="text" name="categories" id="categories" value="{{ photo.categories }}" /></td>
+    <td><input type="text" name="categories" id="categories" value="{{ photo.categories }}" /> (separated by comma)</td>
 </tr>
 <tr>
     <td><label for="description">Description:</label></td>
