@@ -1,0 +1,12 @@
+Here are all the steps you need to follow in order to install Nuages.
+
+1. Create an AppEngine account (at http://appengine.google.com)
+2. In your AppEngine account, create an application
+3. Install SVN, if it isn't already on your system (http://subversion.tigris.org)
+4. Get the source code from SVN using the following command: svn checkout http://nuages.googlecode.com/svn/trunk/ nuages-read-only
+5. Copy app.yaml.default to app.yaml and settings.py.default to settings.py
+6. Change the application name in app.yaml to match the name of the application you created in AppEngine
+7. Add the application name, URL, your name and your email in settings.py
+8. Download the AppEngine SDK
+9. Use appcfg.py from the AppEngine SDK to install the application 
+10. You're DONE. Go to http://your-app-name.appspot.com/admin/ and login with your Google username to start posting.

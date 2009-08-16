@@ -1,0 +1,13 @@
+Nuages is a simple and easy to use photoblog engine that you can host on Google's AppEngine (http://appengine.google.com).
+
+Features:
+ * no host required (just create a Google AppEngine account)
+ * easy to install (due to Google's AppEngine SDK)
+ * very little configuration needed
+ * browse images by location, categories or just in reverse chronological order
+ * fully customizable templates
+ * friendly URLs 
+
+For step-by-step instructions on how to install it, see the README file.
+The source code is licensed under the New BSD license. See the LICENSE file for details.
+Go to http://code.google.com/p/nuages/ to read more about the project.
